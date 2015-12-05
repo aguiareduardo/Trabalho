@@ -13,7 +13,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.example.paynight.trabalho.MyClass.Product;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     String A[] = {"unix","linux","windows","android","macintosh","firefox","google","facebook",};
     Button b;
     ListView lv;
+    TextView tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +35,14 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Lista.add(new Product("unix"));
-        Lista.add(new Product("linux"));
-        Lista.add(new Product("windows"));
-        Lista.add(new Product("android"));
-        Lista.add(new Product("macintosh"));
-        Lista.add(new Product("firefox"));
-        Lista.add(new Product("facebook"));
+        Lista = new ArrayList<Product>();
+        Lista.add(new Product("unix", ""));
+        Lista.add(new Product("linux",""));
+        Lista.add(new Product("windows",""));
+        Lista.add(new Product("android",""));
+        Lista.add(new Product("macintosh",""));
+        Lista.add(new Product("firefox",""));
+        Lista.add(new Product("facebook",""));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -47,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        tv = (TextView)findViewById(R.id.textView);
         b = (Button)findViewById(R.id.button01);
         lv = (ListView)findViewById(R.id.listView);
 
@@ -58,17 +65,28 @@ public class MainActivity extends AppCompatActivity {
         });
 
         lv.setOnItemClickListener(new ListClickHandler());
-        //initialize();
-    }
-
-    public void initialize()
-    {
     }
 
     public void populate()
     {
+
         ArrayAdapter<Product> adapter = new ArrayAdapter<Product>(this,android.R.layout.simple_list_item_1, Lista);
         lv.setAdapter(adapter);
+    }
+
+    public List<Product> GetProductList()
+    {
+        List<Product> aux = new ArrayList<Product>();
+        String texto = tv.getText().toString();
+
+        for (Product product:Lista)
+        {
+            if (product.getNome().contains(texto)) {
+                aux.add(product);
+            }
+        }
+
+        return aux;
     }
 
     public void Onclick(View view)
@@ -110,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
             // create intent to start another activity
             Intent intent = new Intent(MainActivity.this, ProductDetail.class);
-            intent.putExtra("selected-item", texto);
+            intent.putExtra("Nome", texto);
             startActivity(intent);
         }
     }
